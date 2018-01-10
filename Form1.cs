@@ -24,7 +24,7 @@ namespace ReadWriteXML
             InitializeComponent();
         }
 
-        //DataSet DS;
+        //DataSet DS; ssx
         DataSet DS = new DataSet();
         DataSet DS2 = new DataSet();
         DataSet toSend = new DataSet();
