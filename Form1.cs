@@ -24,7 +24,7 @@ namespace ReadWriteXML
             InitializeComponent();
         }
 
-        //DataSet DS; ssx
+        //DataSet DS;
         DataSet DS = new DataSet();
         DataSet DS2 = new DataSet();
         DataSet toSend = new DataSet();
@@ -82,7 +82,7 @@ namespace ReadWriteXML
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            ////string oradb = "Data Source=(DESCRIPTION =" + "(ADDRESS = (PROTOCOL = TCP)(HOST = 10.60.10.198)(PORT = 1521))" + "(CONNECT_DATA =" + "(SERVER = DEDICATED)" + "(SERVICE_NAME = XE)));" + "User Id= ;Password=;";
+            //string oradb = "Data Source=(DESCRIPTION =" + "(ADDRESS = (PROTOCOL = TCP)(HOST = 10.60.10.198)(PORT = 1521))" + "(CONNECT_DATA =" + "(SERVER = DEDICATED)" + "(SERVICE_NAME = XE)));" + "User Id= ;Password=;";
             //protected void Page_Load(object sender, EventArgs e) { }
             //protected void btn_Click(object sender, EventArgs e)
            // OracleConnection conn = new OracleConnection(oradb);
@@ -142,15 +142,24 @@ namespace ReadWriteXML
 
                     string serverAddress = "127.0.0.1";
                     int serverPort = 5000;
-
-                    XmlSerializer xs = new XmlSerializer(typeof(DataSet));
                     TcpClient client = new TcpClient();
                     client.Connect(serverAddress, serverPort);
-                    Stream streamToClient = client.GetStream();
+                    //Stream streamToClient = client.GetStream();
+                    BinaryFormatter bf = new BinaryFormatter();
+                    MemoryStream ms = new MemoryStream();
+                    bf.Serialize(ms, DS);
+                    ms.ToArray();
+                    
+                    ms.Write(ms.ToArray(), 0, ms.ToArray().Length);
+                    ms.Seek(0, SeekOrigin.Begin);
+                    DataSet obj = (DataSet)bf.Deserialize(ms);
+                    dataGridView2.DataSource = obj.Tables[0].DefaultView;
+                    dataGridView2.Refresh();
 
-                    xs.Serialize(streamToClient, DS);
 
-                    streamToClient.Close();
+                    //xs.Serialize(streamToClient, DS);
+                    ms.Close();
+                    //streamToClient.Close();
                     client.Close();
 
                     //
